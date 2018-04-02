@@ -1,11 +1,8 @@
-var dispatcher = require('../../../util/dispatcher');
-
-module.exports = function(app) {
-	return new Handler(app);
-};
+var bearcat = require('bearcat');
 
 var Handler = function(app) {
 	this.app = app;
+	tihs.dispatcher = null;
 };
 
 var handler = Handler.prototype;
@@ -35,10 +32,26 @@ handler.queryEntry = function(msg, session, next) {
 		return;
 	}
 	// select connector, because more than one connector existed.
-	var res = dispatcher.dispatch(uid, connectors);
+	var res = this.dispatcher.dispatch(uid, connectors);
 	next(null, {
 		code: 200,
 		host: res.host,
 		port: res.clientPort
 	});
 };
+
+module.exports = function(app) {
+	return bearcat.getBean({
+		id: "gateHandler",
+		func: Handler,
+		args: [{
+			name: "app",
+			value: app
+		}],
+		props: [{
+			name: "dispatcher",
+			ref: "dispatcher"
+		}]
+	});
+};
+

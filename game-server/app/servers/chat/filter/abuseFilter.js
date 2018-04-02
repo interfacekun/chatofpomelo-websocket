@@ -1,7 +1,3 @@
-module.exports = function() {
-  return new Filter();
-}
-
 var Filter = function() {
 };
 
@@ -22,3 +18,7 @@ Filter.prototype.after = function (err, msg, session, resp, next) {
   next(err, resp);
 };
 
+module.exports = {
+  id: "filterBean",
+  func: Filter
+}
